@@ -33,6 +33,7 @@ internal class NullableDateTimePickerContent : ContentView
     private Picker _hoursPicker;
     private Picker _minutesPicker;
     private Picker _amPMPicker;
+    private Label _timeHeaderLabel;
     private StackLayout _timeStackLayout;
     private List<Button> _dayButtons;
     private Grid _monthListGrid;
@@ -1002,14 +1003,14 @@ internal class NullableDateTimePickerContent : ContentView
                 ColumnSpacing = 0,
                 RowSpacing = 0,
                 MaximumWidthRequest = 300,
-                MaximumHeightRequest = 150,
+                MaximumHeightRequest = 140,
                 ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
             },
                 RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(50, GridUnitType.Absolute) }, // header
+                new RowDefinition { Height = new GridLength(40, GridUnitType.Absolute) }, // header
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // dummy row
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // dummy row
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // time
@@ -1028,10 +1029,24 @@ internal class NullableDateTimePickerContent : ContentView
                 VerticalOptions = LayoutOptions.Fill,
                 RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
             }
             };
+
+            _timeHeaderLabel = new Label
+            {
+                HeightRequest = 30,
+                FontSize = 20,
+                TextColor = _options.HeaderForeColor ?? Colors.White,
+                BackgroundColor = Colors.Transparent,
+                HorizontalOptions = LayoutOptions.Start,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                Text = _options.TimePickerHeaderText
+            };
+
+            headerGrid.Add(_timeHeaderLabel);
+            headerGrid.SetRow(_timeHeaderLabel, 0);
 
             _calendarGrid.Add(headerGrid);
 

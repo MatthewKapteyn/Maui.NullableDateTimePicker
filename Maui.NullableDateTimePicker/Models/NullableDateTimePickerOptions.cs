@@ -28,4 +28,5 @@ public class NullableDateTimePickerOptions : INullableDateTimePickerOptions
     public bool CloseOnOutsideClick { get; set; }
     public bool MilitaryTime { get; set; } = true;
     public bool ShowIcons { get; set; } = false;
+    public string TimePickerHeaderText { get; set; } = "Select Time";
 }

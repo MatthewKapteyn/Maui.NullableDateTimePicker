@@ -28,4 +28,5 @@ public interface INullableDateTimePickerOptions
     bool CloseOnOutsideClick { get; set; }
     bool MilitaryTime { get; set; }
     bool ShowIcons { get; set; }
+    string TimePickerHeaderText { get; set; }
 };

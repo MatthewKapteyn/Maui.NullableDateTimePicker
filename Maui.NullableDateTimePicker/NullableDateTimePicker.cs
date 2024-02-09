@@ -451,6 +451,25 @@ BindableProperty.Create(nameof(ToolButtonsStyle), typeof(Style), typeof(Nullable
         }
     }
 
+    public static readonly BindableProperty TimePickerHeaderTextProperty =
+    BindableProperty.Create(
+       nameof(TimePickerHeaderText),
+       typeof(string),
+       typeof(NullableDateTimePicker),
+       "Select Time",
+       defaultBindingMode: BindingMode.OneWay, null, (b, o, n) =>
+       {
+       });
+
+    public string TimePickerHeaderText
+    {
+        get { return (string)GetValue(TimePickerHeaderTextProperty); }
+        set
+        {
+            SetValue(TimePickerHeaderTextProperty, value);
+        }
+    }
+
     public static readonly BindableProperty ShowWeekNumbersProperty = BindableProperty.Create(
     nameof(ShowWeekNumbers),
     typeof(bool),
@@ -860,7 +879,8 @@ BindableProperty.Create(nameof(ToolButtonsStyle), typeof(Style), typeof(Nullable
                 ShowClearButton = this.ShowClearButton,
                 MilitaryTime = this.MilitaryTime,
                 ShowIcons = this.ShowIcons,
-                CloseOnOutsideClick = this.CloseOnOutsideClick
+                CloseOnOutsideClick = this.CloseOnOutsideClick,
+                TimePickerHeaderText = this.TimePickerHeaderText
             };
 
             var result = await NullableDateTimePicker.OpenCalendarAsync(options);
