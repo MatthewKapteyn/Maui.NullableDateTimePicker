@@ -26,4 +26,6 @@ public interface INullableDateTimePickerOptions
     Color? ActivityIndicatorColor { get; set; }
     bool ShowClearButton { get; set; }
     bool CloseOnOutsideClick { get; set; }
+    bool MilitaryTime { get; set; }
+    bool ShowIcons { get; set; }
 };
