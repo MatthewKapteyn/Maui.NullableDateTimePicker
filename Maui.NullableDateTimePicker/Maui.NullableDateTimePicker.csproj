@@ -53,4 +53,8 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Images\*" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="FFImageLoading.Maui" Version="1.0.9" />
+	</ItemGroup>
 </Project>

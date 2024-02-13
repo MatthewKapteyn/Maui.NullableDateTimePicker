@@ -11,9 +11,8 @@ public class NullableDateTimePicker : ContentView
     public event EventHandler<DateTimeChangedEventArgs> NullableDateTimeChanged;
     private Grid _dateTimePickerGrid;
     private Entry _dateTimePickerEntry;
-    private Image _dateTimePickerIcon;
+    private FFImageLoading.Maui.CachedImage _dateTimePickerIcon;
     private Border _dateTimePickerBorder;
-    private bool isSetIconCalledForFirstTime = false;
     const double defaultHeightRequest = 40;
     static Page Page => Application.Current?.MainPage ?? throw new NullReferenceException();
 
@@ -37,7 +36,7 @@ public class NullableDateTimePicker : ContentView
             VerticalTextAlignment = this.VerticalTextAlignment
         };
 
-        _dateTimePickerIcon = new Image
+        _dateTimePickerIcon = new FFImageLoading.Maui.CachedImage
         {
             BackgroundColor = this.IconBackgroundColor,
             Aspect = Aspect.AspectFit,
@@ -56,10 +55,9 @@ public class NullableDateTimePicker : ContentView
         };
 
         // When we hide the icons, open up calendar when entry is tapped instead
-        if (this.ShowIcons)
-            _dateTimePickerIcon.GestureRecognizers.Add(tapGestureRecognizer);
-        else
-            _dateTimePickerEntry.GestureRecognizers.Add(tapGestureRecognizer);
+        // N.B. This does not read the bound property in time to work. It will always be the default ShowIconsPoperty value when referenced here during initialization
+        _dateTimePickerIcon.GestureRecognizers.Add(tapGestureRecognizer);
+        _dateTimePickerEntry.GestureRecognizers.Add(tapGestureRecognizer);
 
         _dateTimePickerGrid = new Microsoft.Maui.Controls.Grid
         {
@@ -73,16 +71,13 @@ public class NullableDateTimePicker : ContentView
         };
 
         _dateTimePickerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        if (this.ShowIcons)
-            _dateTimePickerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+        _dateTimePickerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
 
         _dateTimePickerGrid.SetColumn(_dateTimePickerEntry, 0);
-        if (this.ShowIcons)
-            _dateTimePickerGrid.SetColumn(_dateTimePickerIcon, 1);
+        _dateTimePickerGrid.SetColumn(_dateTimePickerIcon, 1);
 
         _dateTimePickerGrid.Add(_dateTimePickerEntry);
-        if (this.ShowIcons)
-            _dateTimePickerGrid.Add(_dateTimePickerIcon);
+        _dateTimePickerGrid.Add(_dateTimePickerIcon);
 
         var dateTimePickerStackLayout = new StackLayout
         {
@@ -92,11 +87,8 @@ public class NullableDateTimePicker : ContentView
         };
         dateTimePickerStackLayout.Add(_dateTimePickerGrid);
 
-        if (this.ShowIcons)
-        {
-            _dateTimePickerIcon.SetBinding(Image.WidthRequestProperty, new Binding("Height", source: dateTimePickerStackLayout));
-            _dateTimePickerIcon.SetBinding(Image.HeightRequestProperty, new Binding("Height", source: dateTimePickerStackLayout));
-        }
+        _dateTimePickerIcon.SetBinding(Image.WidthRequestProperty, new Binding("Height", source: dateTimePickerStackLayout));
+        _dateTimePickerIcon.SetBinding(Image.HeightRequestProperty, new Binding("Height", source: dateTimePickerStackLayout));
 
         _dateTimePickerEntry.SetBinding(Entry.HeightRequestProperty, new Binding("Height", source: dateTimePickerStackLayout));
 
@@ -116,19 +108,13 @@ public class NullableDateTimePicker : ContentView
             VerticalOptions = LayoutOptions.Fill
         };
 
-        // N.B this does not work reliably in complex views. It is best to keep icons turned off
-        this.Loaded += (s, e) =>
-        {
-            if (!isSetIconCalledForFirstTime)
-                SetCalendarIcon();
-        };
-
         Content = _dateTimePickerBorder;
     }
 
     public static async Task<object> OpenCalendarAsync(INullableDateTimePickerOptions options)
     {
         PopupResultTask<PopupResult> popupResultTask = null;
+
         try
         {
             popupResultTask = new PopupResultTask<PopupResult>();
@@ -553,13 +539,16 @@ BindableProperty.Create(nameof(ToolButtonsStyle), typeof(Style), typeof(Nullable
     nameof(ShowIcons),
     typeof(bool),
     typeof(NullableDateTimePicker),
-    defaultValue: false,
+    defaultValue: true,
     defaultBindingMode: BindingMode.OneWay);
 
     public bool ShowIcons
     {
         get { return (bool)GetValue(ShowIconsProperty); }
-        set { SetValue(ShowIconsProperty, value); }
+        set { 
+            SetValue(ShowIconsProperty, value);
+            SetCalendarIcon();
+        }
     }
 
     public static readonly BindableProperty CloseOnOutsideClickProperty = BindableProperty.Create(
@@ -912,39 +901,39 @@ BindableProperty.Create(nameof(ToolButtonsStyle), typeof(Style), typeof(Nullable
         }
     }
 
-
-    string imgName;
-    ImageSource imgSource;
-
     private async void SetCalendarIcon()
     {
-        isSetIconCalledForFirstTime = true;
+        // waits to read the ShowIcon property
+        // if read too quickly we won't get the bound value and only get the default
+        await Task.Delay(100);
         if (this.ShowIcons)
         {
-            await Task.Delay(100);
-            if (Icon != null)
+            try
             {
-                if (imgSource != Icon)
+                if (Icon != null)
                 {
-                    imgSource = Icon;
                     _dateTimePickerIcon.Source = Icon;
                 }
-            }
-            else
-            {
-                string imageName = "date_icon.png";
-
-                if (Mode == PickerModes.DateTime)
-                    imageName = "date_time_icon.png";
-                else if (Mode == PickerModes.Time)
-                    imageName = "time_icon.png";
-
-                if (imgName != imageName)
+                else
                 {
-                    imgName = imageName;
+                    string imageName = "date_icon.png";
+
+                    if (Mode == PickerModes.DateTime)
+                        imageName = "date_time_icon.png";
+                    else if (Mode == PickerModes.Time)
+                        imageName = "time_icon.png";
+
                     _dateTimePickerIcon.Source = ImageSource.FromResource($"Maui.NullableDateTimePicker.Images.{imageName}", typeof(NullableDateTimePicker).GetTypeInfo().Assembly);
                 }
             }
+            catch (Exception ex)
+            {
+                // Prevents NaN width exception crash when Image source is referenced too quickly
+            }
+        } 
+        else
+        {
+            _dateTimePickerIcon.Source = null;
         }
     }
 
