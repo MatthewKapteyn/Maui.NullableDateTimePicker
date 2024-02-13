@@ -906,10 +906,11 @@ BindableProperty.Create(nameof(ToolButtonsStyle), typeof(Style), typeof(Nullable
         // waits to read the ShowIcon property
         // if read too quickly we won't get the bound value and only get the default
         await Task.Delay(100);
-        if (this.ShowIcons)
+        try
         {
-            try
+            if (this.ShowIcons)
             {
+                // Update icon
                 if (Icon != null)
                 {
                     _dateTimePickerIcon.Source = Icon;
@@ -925,15 +926,16 @@ BindableProperty.Create(nameof(ToolButtonsStyle), typeof(Style), typeof(Nullable
 
                     _dateTimePickerIcon.Source = ImageSource.FromResource($"Maui.NullableDateTimePicker.Images.{imageName}", typeof(NullableDateTimePicker).GetTypeInfo().Assembly);
                 }
-            }
-            catch (Exception ex)
+            } 
+            else
             {
-                // Prevents NaN width exception crash when Image source is referenced too quickly
+                // Remove icon
+                _dateTimePickerIcon.Source = null;
             }
-        } 
-        else
+        }
+        catch (Exception ex)
         {
-            _dateTimePickerIcon.Source = null;
+            // Prevents NaN width exception crash when _dateTimePickerIcon.Source is referenced too quickly
         }
     }
 
