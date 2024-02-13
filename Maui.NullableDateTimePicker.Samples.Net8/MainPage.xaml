@@ -24,13 +24,27 @@
     Style="{StaticResource SubHeadline}"
     SemanticProperties.HeadingLevel="Level2"
     SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
+
             <ndtp:NullableDateTimePicker NullableDateTime="{Binding MyDateTime}" 
-                 Mode="DateTime"
-                 WidthRequest="300" 
-                 ShowWeekNumbers="True"
-                 HorizontalOptions="Start"
-                 CornerRadius="5"
-                 Padding="5,0,5,0" />
+                Mode="DateTime"
+                WidthRequest="300"
+                ShowWeekNumbers="True"
+                HorizontalOptions="Start"
+                CornerRadius="5"
+                ShowIcons="False"
+                MilitaryTime="False"
+                OkButtonText="Okay"
+                Placeholder="Shown when null"
+                Padding="5,0,5,0" />
+
+
+            <Grid
+                x:Name="DateListGrid"
+                RowSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+            </Grid>
 
             <Button
                 x:Name="CounterBtn"

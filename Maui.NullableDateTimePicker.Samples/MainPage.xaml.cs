@@ -66,7 +66,9 @@ namespace Maui.NullableDateTimePicker.Samples
                 ShowWeekNumbers = true,
                 ShowOtherMonthDays = true,
                 HorizontalOptions = LayoutOptions.Fill,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                ShowIcons = false,
+                MilitaryTime = false,
             };
 
             datePicker.SetAppThemeColor(Maui.NullableDateTimePicker.NullableDateTimePicker.ForeColorProperty, Microsoft.Maui.Graphics.Colors.Black, Microsoft.Maui.Graphics.Colors.White);
