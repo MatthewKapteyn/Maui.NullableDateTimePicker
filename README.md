@@ -1,10 +1,14 @@
 # Maui Nullable and Clearable DateTimePicker
 The Nullable DateTimePicker is a custom calendar control for selecting a nullable date and time value in a .NET MAUI application. It provides a consistent and platform-independent user interface for selecting dates, and allows the user to clear the value if needed.
 
-This control uses the <a href="https://github.com/CommunityToolkit/Maui" target="_blank">CommunityToolkit.Maui</a> Popup.
+This control uses the following depencies:
 
-[![NuGet](https://img.shields.io/badge/nuget-v2.1.0-blue.svg?style=plastic)](https://www.nuget.org/packages/Sebarslan.Maui.NullableDateTimePicker)
+<ul>
+<li><a href="https://github.com/CommunityToolkit/Maui" target="_blank">CommunityToolkit.Maui</a> For the popup.</li>
+<li><a href="https://github.com/microspaze/FFImageLoading.Maui" target="_blank">FFImageLoading.Maui</a> For icon image performance.</li>
+</ul>
 
+To use this fork, either create your own nuget or add it as a project reference to your app.
 
 # Usage
 To use the Nullable DateTimePicker control in your .NET MAUI application, follow these steps:
@@ -113,7 +117,9 @@ More examples, please see the samples project
 | WeekNumberStyle | Style of the week numbers in the calendar. | null |
 | ShowWeekNumbers | Determines whether to display week numbers in the calendar.	| false |
 | ShowOtherMonthDays | Determines whether to display other month days in the calendar.	| true |
-
+| ShowIcons | Used to remove icons entirely. | true |
+| MilitaryTime | If false, the time picker will have an AM/PM selector. | true |
+| TimePickerHeaderText | Used to cusomize the Time mode picker header text.	| "Select Time" |
 
 ## Datetimepicker Input Options (If NullableDateTimePicker is used as ContentView)
 | Option | Description | Default Value |
@@ -170,6 +176,10 @@ on ios, android, windows
 ![DateTimePicker](https://raw.githubusercontent.com/sebarslan/Maui.NullableDateTimePicker/main/screenshot.png)
 
 # Changelog
+
+### Fork
+- Fixed: Icons tanking performance
+- Added: New options. MilitaryTime, ShowIcons, TimePickerHeaderText
 
 ### 2.1.0
 - Fixed: Content is already a child of Microsoft.Maui.Controls.ContentPage.
