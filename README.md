@@ -1,7 +1,7 @@
 # Maui Nullable and Clearable DateTimePicker
 The Nullable DateTimePicker is a custom calendar control for selecting a nullable date and time value in a .NET MAUI application. It provides a consistent and platform-independent user interface for selecting dates, and allows the user to clear the value if needed.
 
-This control uses the following depencies:
+This control uses the following dependencies:
 
 <ul>
 <li><a href="https://github.com/CommunityToolkit/Maui" target="_blank">CommunityToolkit.Maui</a> For the popup.</li>
